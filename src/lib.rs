@@ -110,7 +110,9 @@ pub fn common_methods(_: TokenStream, item: TokenStream) -> TokenStream {
     TokenStream::from(ast.to_token_stream())
 }
 
-/// Add an `id` getter to an RPC Request object.
+/// Add an `id` getter to an RPC request object.
+///
+/// By convention, assumes the `id` lives at `self.base.id`.
 #[proc_macro_attribute]
 pub fn rpc_id_getter(_: TokenStream, item: TokenStream) -> TokenStream {
     let mut ast = parse_macro_input!(item as ItemImpl);
