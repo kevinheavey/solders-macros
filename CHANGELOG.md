@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.0] - 2022-06-28
+
+### Added
+
+Add `rpc_id_getter` [(#2)](https://github.com/kevinheavey/solders-macros/pull/2).
+
 ## [0.2.0] - 2022-06-28
 
 ### Changed
