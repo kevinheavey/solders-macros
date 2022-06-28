@@ -86,9 +86,9 @@ pub fn richcmp_signer(_: TokenStream, item: TokenStream) -> TokenStream {
     TokenStream::from(ast.to_token_stream())
 }
 
-/// Add `__bytes__`, `__str__`, `__repr__` and `__reduce__` using the `CommonMethods` trait.
+/// Add `__bytes__`, `__str__`, `__repr__` and `__reduce__`, `to_json` and `from_json` using the `CommonMethods` trait.
 #[proc_macro_attribute]
-pub fn common_magic_methods(_: TokenStream, item: TokenStream) -> TokenStream {
+pub fn common_methods(_: TokenStream, item: TokenStream) -> TokenStream {
     let mut ast = parse_macro_input!(item as ItemImpl);
     let methods = &[
         ImplItem::Verbatim(
@@ -99,6 +99,12 @@ pub fn common_magic_methods(_: TokenStream, item: TokenStream) -> TokenStream {
         ImplItem::Verbatim(
             quote! { pub fn __reduce__(&self) -> pyo3::prelude::PyResult<(pyo3::prelude::PyObject, pyo3::prelude::PyObject)> {self.pyreduce()} },
         ),
+        ImplItem::Verbatim(quote! {
+        /// Convert to a JSON string.
+        pub fn to_json(&self) -> String {self.py_to_json()} }),
+        ImplItem::Verbatim(quote! {
+        /// Build from a JSON string.
+        #[staticmethod] pub fn from_json(raw: &str) -> PyResult<Self> {Self::py_from_json(raw)} }),
     ];
     ast.items.extend_from_slice(methods);
     TokenStream::from(ast.to_token_stream())
