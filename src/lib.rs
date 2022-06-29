@@ -4,8 +4,9 @@
 //! These macros make some very specific assumptions about the structs
 //! they're applied to, so they're unlikely to be useful for other projects.
 use proc_macro::TokenStream;
+use proc_macro2::Ident;
 use quote::{quote, ToTokens};
-use syn::{parse_macro_input, ImplItem, ItemImpl};
+use syn::{parse_macro_input, ImplItem, ItemEnum, ItemImpl};
 
 /// Add a `__hash__` to the impl using the `PyHash` trait.
 ///
@@ -42,8 +43,6 @@ pub fn pyhash(_: TokenStream, item: TokenStream) -> TokenStream {
 ///
 /// ```rust
 /// use solders_macros::richcmp_full;
-/// use pyo3::prelude::*;
-/// use pyo3::pyclass::CompareOp;
 ///
 ///
 /// #[derive(Debug)]
@@ -124,4 +123,70 @@ pub fn rpc_id_getter(_: TokenStream, item: TokenStream) -> TokenStream {
     }};
     ast.items.push(ImplItem::Verbatim(to_add));
     TokenStream::from(ast.to_token_stream())
+}
+
+// macro_rules! enum_variants_mapping {
+//     ($left:ident, $right:ident, $($field:ident),+) => {
+//         impl From<$left> for $right {
+//             fn from(left: $left) -> $right {
+//                 match left {
+//                     $($left::$field => $right::$field),+
+//                 }
+//             }
+//         }
+//     };
+// }
+
+// enum_variants_mapping!(Foo, Bar, A, B, C);
+
+/// Add mappings to and from another enum that has the exact same fields.
+///
+/// # Example
+///
+/// ```rust
+/// use solders_macros::enum_original_mapping;
+///
+/// #[derive(PartialEq, Debug)]
+/// pub enum Foo {
+///   A,
+///   B
+/// }
+/// #[enum_original_mapping(Foo)]
+/// #[derive(PartialEq, Debug)]
+/// pub enum Bar {
+///   A,
+///   B,
+/// }
+///
+/// let a = Bar::A;
+/// let b = Foo::B;
+/// assert_eq!(Foo::from(a), Foo::A);
+/// assert_eq!(Bar::from(b), Bar::B);
+///
+#[proc_macro_attribute]
+pub fn enum_original_mapping(original: TokenStream, item: TokenStream) -> TokenStream {
+    let mut new_stream = proc_macro2::TokenStream::from(item.clone());
+    let ast = parse_macro_input!(item as ItemEnum);
+    let enum_name = ast.ident;
+    let orig = parse_macro_input!(original as Ident);
+    let variant_names: Vec<Ident> = ast.variants.into_iter().map(|v| v.ident).collect();
+    let from_impl = quote! {
+        impl From<#orig> for #enum_name {
+            fn from(left: #orig) -> Self {
+                match left {
+                    #(#orig::#variant_names => Self::#variant_names),*
+                }
+            }
+        }
+
+        impl From<#enum_name> for #orig {
+            fn from(left: #enum_name) -> Self {
+                match left {
+                    #(#enum_name::#variant_names => Self::#variant_names),*
+                }
+            }
+        }
+    };
+    new_stream.extend(from_impl);
+    TokenStream::from(new_stream)
 }
