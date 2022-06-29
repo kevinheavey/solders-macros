@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.0] - 2022-06-29
+
+### Added
+
+Add `enum_original_mapping` [(#3)](https://github.com/kevinheavey/solders-macros/pull/3).
+
 ## [0.3.0] - 2022-06-28
 
 ### Added
