@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.2] - 2022-06-30
+
+### Fixed
+
+Add missing comma in `enum_original_mapping` [(#5)](https://github.com/kevinheavey/solders-macros/pull/5).
+
 ## [0.4.1] - 2022-06-30
 
 ### Fixed
