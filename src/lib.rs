@@ -175,6 +175,7 @@ pub fn enum_original_mapping(original: TokenStream, item: TokenStream) -> TokenS
             fn from(left: #orig) -> Self {
                 match left {
                     #(#orig::#variant_names => Self::#variant_names),*
+                    _ => panic!("Unrecognized variant: {:?}", left)
                 }
             }
         }
