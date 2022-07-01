@@ -116,7 +116,7 @@ pub fn common_methods(_: TokenStream, item: TokenStream) -> TokenStream {
 pub fn rpc_id_getter(_: TokenStream, item: TokenStream) -> TokenStream {
     let mut ast = parse_macro_input!(item as ItemImpl);
     let to_add = quote! {
-    /// The ID of the RPC request.
+    /// int: The ID of the RPC request.
     #[getter]
     pub fn id(&self) -> u64 {
         self.base.id
