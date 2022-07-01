@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.3] - 2022-07-01
+
+### Fixed
+
+Add type to docstring in `rpc_id_getter` [(#6)](https://github.com/kevinheavey/solders-macros/pull/6).
+
 ## [0.4.2] - 2022-06-30
 
 ### Fixed
