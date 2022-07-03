@@ -125,20 +125,6 @@ pub fn rpc_id_getter(_: TokenStream, item: TokenStream) -> TokenStream {
     TokenStream::from(ast.to_token_stream())
 }
 
-// macro_rules! enum_variants_mapping {
-//     ($left:ident, $right:ident, $($field:ident),+) => {
-//         impl From<$left> for $right {
-//             fn from(left: $left) -> $right {
-//                 match left {
-//                     $($left::$field => $right::$field),+
-//                 }
-//             }
-//         }
-//     };
-// }
-
-// enum_variants_mapping!(Foo, Bar, A, B, C);
-
 /// Add mappings to and from another enum that has the exact same fields.
 ///
 /// # Example
