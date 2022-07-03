@@ -2,7 +2,7 @@
 
 ## [0.5.0] - 2022-07-03
 
-### Fixed
+### Added
 
 Add `from_bytes` to `common_methods` conditional on the struct impl not already defining it. [(#7)](https://github.com/kevinheavey/solders-macros/pull/7).
 
