@@ -86,10 +86,12 @@ pub fn richcmp_signer(_: TokenStream, item: TokenStream) -> TokenStream {
 }
 
 /// Add `__bytes__`, `__str__`, `__repr__` and `__reduce__`, `to_json` and `from_json` using the `CommonMethods` trait.
+///
+/// Also add `from_bytes` if not already defined.
 #[proc_macro_attribute]
 pub fn common_methods(_: TokenStream, item: TokenStream) -> TokenStream {
     let mut ast = parse_macro_input!(item as ItemImpl);
-    let methods = &[
+    let mut methods = vec![
         ImplItem::Verbatim(
             quote! {pub fn __bytes__<'a>(&self, py: pyo3::prelude::Python<'a>) -> &'a pyo3::types::PyBytes  {self.pybytes(py)}},
         ),
@@ -105,7 +107,26 @@ pub fn common_methods(_: TokenStream, item: TokenStream) -> TokenStream {
         /// Build from a JSON string.
         #[staticmethod] pub fn from_json(raw: &str) -> PyResult<Self> {Self::py_from_json(raw)} }),
     ];
-    ast.items.extend_from_slice(methods);
+    if !ast.items.iter().any(|item| match item {
+        ImplItem::Method(m) => m.sig.ident == "from_bytes",
+        _ => false,
+    }) {
+        let from_bytes = ImplItem::Verbatim(quote! {
+            /// Deserialize from bytes.
+            ///
+            /// Args:
+            ///     data (bytes): the serialized object.
+            ///
+            /// Returns: the deserialized object.
+            ///
+            #[staticmethod]
+            pub fn from_bytes(data: &[u8]) -> PyResult<Self> {
+                Self::py_from_bytes(data)
+            }
+        });
+        methods.push(from_bytes);
+    };
+    ast.items.extend_from_slice(&methods);
     TokenStream::from(ast.to_token_stream())
 }
 
