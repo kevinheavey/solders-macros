@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.0] - 2022-07-07
+
+### Addded
+
+Add `common_methods_rpc_resp` [(#8)](https://github.com/kevinheavey/solders-macros/pull/8).
+
 ## [0.5.0] - 2022-07-03
 
 ### Added
