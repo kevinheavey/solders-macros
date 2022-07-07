@@ -148,7 +148,15 @@ pub fn common_methods_rpc_resp(_: TokenStream, item: TokenStream) -> TokenStream
         pub fn to_json(&self) -> String {self.py_to_json()} }),
         ImplItem::Verbatim(quote! {
         /// Build from a JSON string.
-        #[staticmethod] pub fn from_json(raw: &str) -> PyResult<crate::rpc::responses::Resp<Self>> {Self::py_from_json(raw)} }),
+        ///
+        /// Args:
+        ///     raw (str): The RPC JSON response (can be an error response).
+        ///
+        /// Returns:
+        ///     Either the deserialized object or ``RPCError``.
+        ///
+        #[staticmethod]
+        pub fn from_json(raw: &str) -> PyResult<crate::rpc::responses::Resp<Self>> {Self::py_from_json(raw)} }),
         ImplItem::Verbatim(quote! {
             /// Deserialize from bytes.
             ///
