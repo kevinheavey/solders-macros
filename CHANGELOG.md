@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.1] - 2022-07-07
+
+### Fixed
+
+Fix docstring [(#9)](https://github.com/kevinheavey/solders-macros/pull/9).
+
 ## [0.6.0] - 2022-07-07
 
 ### Addded
