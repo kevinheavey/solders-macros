@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.0] - 2022-07-10
+
+### Added
+
+Added `common_methods_rpc_resp_no_context` [(#10)](https://github.com/kevinheavey/solders-macros/pull/10).
+
 ## [0.6.1] - 2022-07-07
 
 ### Fixed
